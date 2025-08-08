@@ -14,3 +14,27 @@ export const bookEvent = async (eventId, seats, token) => {
     );
     return res.data;
 };
+
+export const getAllUserBookings = async (token) => {
+    const res = await axios.get(
+        API_URL + '/me',
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+    return res.data;
+}
+export const getAllBookings = async (token) => {
+    const res = await axios.get(
+        API_URL + '/',
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+    return res.data;
+}
+

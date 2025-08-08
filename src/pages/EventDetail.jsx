@@ -5,6 +5,7 @@ import { useEvents } from "../context/EventContext";
 import { MdOutlineImageNotSupported } from "react-icons/md";
 import { useUser } from "../context/UserContext";
 import toast from "react-hot-toast";
+import { noImagePreview } from "../assets/data";
 
 const EventDetail = () => {
     const { id } = useParams();
@@ -17,6 +18,7 @@ const EventDetail = () => {
         if (id && events.length > 0) {
             const eventInfo = events.find((event) => event._id === id);
             setEvent(eventInfo);
+            console.log(eventInfo)
         }
     }, [id, events]);
 
@@ -35,19 +37,12 @@ const EventDetail = () => {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
-            {/* Image or Fallback */}
-            {event.image ? (
-                <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-96 object-cover rounded-lg shadow-sm"
-                />
-            ) : (
-                <div className="w-full h-96 bg-gray-100 flex flex-col justify-center items-center rounded-lg shadow-sm text-gray-500">
-                    <MdOutlineImageNotSupported className="w-10 h-10 mb-2" />
-                    <span className="text-sm">Image not available</span>
-                </div>
-            )}
+            <img
+                src={event.image || noImagePreview}
+                alt={event.title}
+                className="w-full h-96 object-cover rounded-lg shadow-sm"
+            />
+
 
             {/* Info */}
             <div className="mt-6">
@@ -60,11 +55,11 @@ const EventDetail = () => {
                     <p><span className="font-semibold">Date:</span> {new Date(event.date).toDateString()}</p>
                     <p><span className="font-semibold">Time:</span> {event.time}</p>
                     <p><span className="font-semibold">Price:</span> ₹{event.price}</p>
-                    <p><span className="font-semibold">Available Seats:</span> {event.totalSeats - event.bookedSeats}</p>
+                    <p><span className="font-semibold">Available Seats:</span> {event.totalSeats - event.bookedSeats?.length}</p>
                 </div>
 
                 <button
-                    onClick={() => user ? setShowModal(true) : navigate('/login')}
+                    onClick={() => user ? navigate('/seat-booking/' + event._id) : navigate('/login')}
                     className="mt-6 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200"
                 >
                     Book Now

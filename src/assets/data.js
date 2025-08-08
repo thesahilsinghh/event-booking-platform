@@ -1,0 +1,1 @@
+export const noImagePreview = 'https://as1.ftcdn.net/v2/jpg/02/64/55/16/1000_F_264551609_amWLztV93bCqYB5Fr00HdHWubJyX5iDV.jpg';

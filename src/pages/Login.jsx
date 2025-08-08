@@ -1,5 +1,5 @@
 // pages/Login.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import { AuthenticationLayout } from "../layouts/AuthenticationLayout";
@@ -9,8 +9,13 @@ import toast from "react-hot-toast";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { loginUser } = useUser()
+    const { loginUser, user } = useUser()
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) navigate('/')
+    }, [user])
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,7 +32,7 @@ const Login = () => {
     return (
         <AuthenticationLayout>
             <h2 className="text-xl font-semibold text-gray-700 mb-6 text-center">Welcome Back 👋</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <InputField type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <InputField type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors font-medium">

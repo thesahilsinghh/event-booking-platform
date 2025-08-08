@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import { AuthenticationLayout } from "../layouts/AuthenticationLayout";
@@ -7,7 +7,7 @@ import { useUser } from "../context/UserContext";
 
 export const Register = () => {
     const navigate = useNavigate();
-    const { signup } = useUser()
+    const { signup, user } = useUser()
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -15,6 +15,10 @@ export const Register = () => {
         password: "",
         role: "user"
     });
+
+    useEffect(() => {
+        if (user) navigate('/')
+    }, [user])
 
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -51,14 +55,14 @@ export const Register = () => {
             return "Password must be at least 6 characters long.";
         }
 
-        return null; // No error
+        return null;
     };
 
 
     return (
         <AuthenticationLayout>
             <h2 className="text-xl font-semibold text-gray-700 mb-6 text-center">Hello there 👋</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <InputField name="name" type="text" placeholder="Name" value={formData.name} onChange={handleChange} />
                 <InputField name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
                 <InputField name="phone" type="tel" placeholder="Phone" value={formData.phone} onChange={handleChange} />

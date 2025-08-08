@@ -7,8 +7,12 @@ export const getAllEvents = async () => {
     return res.data;
 };
 
-export const createEvent = async (eventData) => {
-    const res = await axios.post(API_URL, eventData);
+export const createEvent = async (eventData, token) => {
+    const res = await axios.post(API_URL, eventData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
     return res.data;
 };
 
@@ -17,12 +21,20 @@ export const getEventById = async (id) => {
     return res.data;
 };
 
-export const updateEvent = async (id, updatedData) => {
-    const res = await axios.put(`${API_URL}/${id}`, updatedData);
+export const updateEvent = async (id, updatedData, token) => {
+    const res = await axios.put(`${API_URL}/${id}`, updatedData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
     return res.data;
 };
 
-export const deleteEvent = async (id) => {
-    const res = await axios.delete(`${API_URL}/${id}`);
+export const deleteEvent = async (id, token) => {
+    const res = await axios.delete(`${API_URL}/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
     return res.data;
 };

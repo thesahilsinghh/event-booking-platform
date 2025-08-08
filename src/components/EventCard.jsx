@@ -1,32 +1,36 @@
-import React from "react";
-import { MdOutlineImageNotSupported } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { noImagePreview } from "../assets/data";
 
 const EventCard = ({ event }) => {
     const navigate = useNavigate();
-    const hasImage = !!event.image;
+    const imageLink = event.image || noImagePreview;
 
     return (
         <div
-            className="border p-4 rounded shadow hover:shadow-md cursor-pointer"
+            className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
             onClick={() => navigate(`/event/${event._id}`)}
         >
-            {hasImage ? (
+            <div className="relative h-52 w-full">
                 <img
-                    src={event.image}
+                    src={imageLink}
                     alt={event.title}
-                    className="w-full h-48 object-cover rounded"
+                    className="w-full h-full object-cover"
                 />
-            ) : (
-                <div className="w-full h-48 bg-gray-100 flex flex-col justify-center items-center rounded text-gray-500">
-                    <MdOutlineImageNotSupported className="w-8 h-8 mb-1" />
-                    <span className="text-sm">Image not available</span>
-                </div>
-            )}
-            <h2 className="text-xl font-semibold mt-2">{event.title}</h2>
-            <p className="text-sm text-gray-600">
-                ₹{event.price} | {new Date(event.date).toDateString()}
-            </p>
+                {/* gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+            </div>
+
+            <div className="p-5">
+                <h2 className="text-lg font-semibold text-gray-800 truncate">
+                    {event.title}
+                </h2>
+                <p className="mt-2 text-sm text-gray-500">
+                    ₹{event.price} • {new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                </p>
+                <p className="mt-1 text-sm text-gray-600 truncate">
+                    {event.venue}
+                </p>
+            </div>
         </div>
     );
 };
