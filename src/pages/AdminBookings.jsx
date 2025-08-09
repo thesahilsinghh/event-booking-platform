@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { getAllBookings } from '../services/bookingServices';
+import { getAllBookings, getAllUserBookings } from '../services/bookingServices';
 import { format } from 'date-fns';
 import { useUser } from '../context/UserContext';
+import { useParams } from 'react-router-dom';
 
 export const AdminBookings = () => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useUser();
+    const { userId } = useParams(); // <-- get userId from URL
 
     useEffect(() => {
         async function fetchBookings() {
             try {
-                const res = await getAllBookings(user?.token);
-                setBookings(res);
+                let res = await getAllBookings(user?.token);
+                if (userId) {
+                    console.log(res)
+                    const data = res.filter(booking => booking.user?._id === userId);
+                    console.log(data)
+                    setBookings(data)
+                } else {
+                    setBookings(res);
+                }
             } catch (error) {
                 console.error("Error fetching bookings:", error);
             } finally {
@@ -20,12 +29,14 @@ export const AdminBookings = () => {
             }
         }
         fetchBookings();
-    }, [user?.token]);
+    }, [user?.token, userId]);
 
     if (loading) {
         return (
             <div className="p-10 flex justify-center items-center bg-gray-100">
-                <p className="text-gray-500 text-lg">Loading all bookings...</p>
+                <p className="text-gray-500 text-lg">
+                    {userId ? 'Loading user bookings...' : 'Loading all bookings...'}
+                </p>
             </div>
         );
     }
@@ -33,7 +44,9 @@ export const AdminBookings = () => {
     return (
         <div className="p-10 bg-gray-50 min-h-screen">
             <div className="bg-white p-6 rounded-xl shadow-lg">
-                <h2 className="text-2xl font-semibold text-gray-700 mb-6">All Bookings</h2>
+                <h2 className="text-2xl font-semibold text-gray-700 mb-6">
+                    {userId ? `Bookings for User: ${bookings[0]?.user?.email || userId}` : 'All Bookings'}
+                </h2>
                 {bookings.length === 0 ? (
                     <p className="text-gray-500">No bookings found.</p>
                 ) : (
@@ -54,10 +67,7 @@ export const AdminBookings = () => {
                             </thead>
                             <tbody>
                                 {bookings.map((booking, index) => (
-                                    <tr
-                                        key={booking._id}
-                                        className="hover:bg-gray-50 transition"
-                                    >
+                                    <tr key={booking._id} className="hover:bg-gray-50 transition">
                                         <td className="border p-3">{index + 1}</td>
                                         <td className="border p-3 font-medium">{booking.event?.title || 'N/A'}</td>
                                         <td className="border p-3">{booking.user?.name || booking.user || 'N/A'}</td>
@@ -70,9 +80,7 @@ export const AdminBookings = () => {
                                         <td className="border p-3">{booking.event?.category || 'N/A'}</td>
                                         <td className="border p-3 text-center">
                                             {Array.isArray(booking.seatsBooked) && booking.seatsBooked.length > 0
-                                                ? booking.seatsBooked
-                                                    .map(seat => `${seat.row}${seat.number}`)
-                                                    .join(', ')
+                                                ? booking.seatsBooked.map(seat => `${seat.row}${seat.number}`).join(', ')
                                                 : 'N/A'}
                                         </td>
                                         <td className="border p-3 text-center">

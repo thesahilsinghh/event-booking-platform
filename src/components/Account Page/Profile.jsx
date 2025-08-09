@@ -1,37 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useUser } from '../../context/UserContext';
 import { FaUser, FaPhone, FaEnvelope } from 'react-icons/fa';
-import { getUserProfile } from '../../services/authServices';
 
 export const Profile = () => {
-    const { user } = useUser();
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { userData } = useUser();
+    const displayUser = userData;
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            if (!user?.token) return;
-            try {
-                const profile = await getUserProfile(user.token);
-                setUserData(profile);
-            } catch (error) {
-                console.error("Error fetching profile:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchProfile();
-    }, [user]);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex justify-center items-center bg-gray-100">
-                <p className="text-gray-500 text-lg">Loading profile...</p>
-            </div>
-        );
-    }
-
-    const displayUser = userData || user;
 
     if (!displayUser) {
         return (

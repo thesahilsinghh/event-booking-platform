@@ -4,8 +4,6 @@ import axios from "axios";
 const API_AUTH = import.meta.env.VITE_API_BASE_URL + "/api/auth";
 
 export const login = async (credentials) => {
-    console.log(API_AUTH)
-    console.log(credentials)
     const res = await axios.post(`${API_AUTH}/login`, credentials);
     return res.data;
 };
@@ -17,6 +15,15 @@ export const register = async (userData) => {
 
 export const getUserProfile = async (token) => {
     const res = await axios.get(`${API_AUTH}/profile`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+    return res.data;
+};
+
+export const getAllUsers = async (token) => {
+    const res = await axios.get(`${API_AUTH}/`, {
         headers: {
             Authorization: `Bearer ${token}`,
         }

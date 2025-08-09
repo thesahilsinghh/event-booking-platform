@@ -1,23 +1,27 @@
-import { useEffect, useState } from "react";
-import { FaPlus, FaEdit, FaImage } from "react-icons/fa";
-import { getAllEvents } from "../services/eventServices";
+import { FaPlus, FaEdit, FaImage, FaTrash } from "react-icons/fa";
+import { deleteEvent, getAllEvents } from "../services/eventServices";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useUser } from "../context/UserContext";
+import { useEvents } from "../context/EventContext";
 
 export const AdminEventsPage = () => {
-    const [events, setEvents] = useState([]);
+
+    const { events, removeEvent } = useEvents()
+    const { user } = useUser()
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchEvents();
-    }, []);
 
-    async function fetchEvents() {
+    const handleDeleteEvent = async (eventId) => {
         try {
-            const res = await getAllEvents();
-            setEvents(res);
+            await deleteEvent(eventId, user.token)
+            removeEvent(eventId)
+            toast.success('Event deleted successfully!')
         } catch (error) {
-            console.error("Failed to fetch events:", error);
+            console.log(error)
+            toast.error('Failed to delete event! Please try again later')
         }
+
     }
 
     return (
@@ -94,12 +98,20 @@ export const AdminEventsPage = () => {
                                             {bookedSeats} / {totalSeats}
                                         </td>
                                         <td className="py-3 px-4 border-b">
-                                            <button
-                                                onClick={() => navigate(`/admin/events/edit/${event._id}`)}
-                                                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded shadow hover:bg-blue-500 active:scale-95 transition"
-                                            >
-                                                <FaEdit /> Edit
-                                            </button>
+                                            <div className="flex gap-1">
+                                                <button
+                                                    onClick={() => navigate(`/admin/events/edit/${event._id}`)}
+                                                    className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded shadow hover:bg-blue-500 active:scale-95 transition"
+                                                >
+                                                    <FaEdit />
+                                                </button>
+                                                <button
+                                                    onClick={() => { handleDeleteEvent(event._id) }}
+                                                    className="flex items-center gap-1 px-3 py-1 bg-red-500 text-white rounded shadow hover:bg-red-500 active:scale-95 transition"
+                                                >
+                                                    <FaTrash />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 );

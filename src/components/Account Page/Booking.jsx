@@ -69,7 +69,7 @@ export const Booking = () => {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <FaTicketAlt className="text-blue-600" />
-                                        {booking.seatsBooked} seat(s)
+                                        {booking?.seatsBooked.length || 0} seat(s)
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <FaRupeeSign className="text-blue-600" />

@@ -12,7 +12,7 @@ export const AddEventPage = () => {
     const handleAdd = async (data) => {
         try {
             await createEvent(data, user.token);
-            navigate("/admin/events");
+            navigate("/admin/events", { replace: true });
             toast.success('Event added!')
         } catch (error) {
             console.error("Error adding event:", error);

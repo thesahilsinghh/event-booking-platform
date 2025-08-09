@@ -18,7 +18,6 @@ const EventDetail = () => {
         if (id && events.length > 0) {
             const eventInfo = events.find((event) => event._id === id);
             setEvent(eventInfo);
-            console.log(eventInfo)
         }
     }, [id, events]);
 

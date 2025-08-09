@@ -13,6 +13,8 @@ import { AddEventPage } from '../pages/AddEventPage';
 import { EditEventPage } from '../pages/EditEventPage';
 import { AdminBookings } from '../pages/AdminBookings';
 import SeatSelectionPage from '../pages/SeatSelectionPage';
+import ProtectedRoute from './ProtectedRoute';
+import { AdminUsersPage } from '../pages/AdminUsersPage';
 
 const AppRoutes = () => {
     return (
@@ -25,12 +27,18 @@ const AppRoutes = () => {
                 <Route path='/seat-booking/:eventId' element={<SeatSelectionPage />} />
             </Route>
 
-            <Route path='/admin' element={<AdminPageLayout />}>
+            <Route path='/admin' element={
+                <ProtectedRoute requiredRole="admin">
+                    <AdminPageLayout />
+                </ProtectedRoute>
+            }>
                 <Route index element={<Dashboard />} />
                 <Route path="events" element={<AdminEventsPage />} />
                 <Route path="events/add" element={<AddEventPage />} />
                 <Route path="events/edit/:id" element={<EditEventPage />} />
                 <Route path="bookings" element={<AdminBookings />} />
+                <Route path="bookings/:userId" element={<AdminBookings />} />
+                <Route path="users" element={<AdminUsersPage />} />
             </Route>
 
             <Route path='/login' element={<Login />} />

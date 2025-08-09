@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaCalendarAlt, FaClipboardList, FaCog } from "react-icons/fa";
+import { FaCalendarAlt, FaClipboardList, FaCog, FaUsers } from "react-icons/fa";
 
 const Sidebar = ({ className }) => {
     const navigate = useNavigate();
@@ -8,6 +8,7 @@ const Sidebar = ({ className }) => {
     const menuItems = [
         { name: "Events", path: "/admin/events", icon: <FaCalendarAlt size={18} /> },
         { name: "Bookings", path: "/admin/bookings", icon: <FaClipboardList size={18} /> },
+        { name: "Users", path: "/admin/users", icon: <FaUsers size={18} /> },
         { name: "Settings", path: "/admin", icon: <FaCog size={18} /> },
     ];
 

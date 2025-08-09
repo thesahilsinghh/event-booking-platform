@@ -24,8 +24,11 @@ export const EventProvider = ({ children }) => {
         fetchEvents();
     }, []);
 
-    const bookSeats = async (id, seats) => {
+    const removeEvent = (eventId) => {
+        setEvents(prev => prev.filter(event => event._id !== eventId))
+    }
 
+    const bookSeats = async (id, seats) => {
         const eventData = events.find(event => event._id === id);
         if (!eventData) throw new Error("Event not found");
         const updatedSeats = eventData.bookedSeats + seats;
@@ -38,6 +41,7 @@ export const EventProvider = ({ children }) => {
     const value = {
         events,
         setEvents,
+        removeEvent,
         loading,
         refreshEvents: fetchEvents,
         bookSeats,
